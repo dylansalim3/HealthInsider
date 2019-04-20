@@ -1,0 +1,137 @@
+@media only screen and (max-width:1100px){
+
+  h1{
+    font-size: 28px;
+  }
+  p{
+    font-size: 18px;
+  }
+  .centered {
+    margin-top: -50px;
+  }
+
+  .display-4{
+    font-size: 30px;
+  }
+
+  .lead{
+    font-size: 20px;
+  }
+}
+
+
+
+@media only screen and (max-width:800px){
+   .hide-on-mobile {
+    display: none;
+  }
+  h1{
+    font-size: 23px;
+  }
+  p{
+    font-size: 13px;
+  }
+  .centered {
+    margin-top: -50px;
+  }
+}
+
+
+
+@media only screen and (max-width:600px){
+  .hide-on-mobile {
+    display: none;
+  }
+  h1{
+    font-size: 17px;
+  }
+  p{
+    font-size: 10px;
+  }
+  .centered {
+    margin-top: -55px;
+  }
+}
+
+
+
+.top-nav {
+  height: 70px;
+}
+
+.nav-item{
+  margin-right: 30px;
+}
+
+.schedule{
+  color: #f68b11!important;
+  font-weight: bold;
+}
+
+a{
+  color:#5a6372;
+}
+
+
+
+.my-footer{
+  padding-top: 100px;
+  color: #fff;
+}
+
+.my-background-2{
+  background: #423d61;
+}
+
+
+
+
+.divider-text {
+    position: relative;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.divider-text span {
+    padding: 7px;
+    font-size: 12px;
+    position: relative;   
+    z-index: 2;
+}
+.divider-text:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    top: 55%;
+    left: 0;
+    z-index: 1;
+}
+
+.btn-facebook {
+    background-color: #405D9D;
+    color: #fff;
+}
+.btn-google {
+    background-color: #DD4B39;
+    color: #fff;
+}
+
+.mycontainer {
+  position: relative;
+  text-align: left;
+  color: #2b2b2d;
+}
+
+.centered {
+  position: absolute;
+  top: 40%;
+  left: 5%;
+  width: 30%;
+}
+
+.hotline{
+background: #2BC0E4;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #EAECC6, #2BC0E4);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #EAECC6, #2BC0E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
