@@ -2,7 +2,7 @@
 session_start();
 
 // Check if the user is already logged in, if yes then redirect him to welcome page
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
+if(isset($_SESSION["ID"])){
     header("location: db_patient_index.php");
     exit();
 }
@@ -16,11 +16,14 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
   $email = $_POST['email'];
   $prefix = $_POST['prefix'];
   $phone = $_POST['phone'];
-  $nric = $_POST['nric'];
+  $nationality = $_POST['nationality'];
+  $nric = str_replace(array(" ","-"), "", $_POST['nric']);
   $address = $_POST['address'];
   $gender = $_POST['gender'];
   $password = $_POST['password'];
   $verify_password = $_POST['password_verify'];
+  $dob = $_POST['dob'];
+  print_r($dob);
 
   if(empty($username)||empty($password)||empty($nric)){
     header("Location:sign_up.php?error=emptyfields");
@@ -37,14 +40,16 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
       mysqli_stmt_bind_param($stmt,"i",$nric);
       mysqli_stmt_execute($stmt);
       $result = mysqli_stmt_get_result($stmt);
-      //Check whether the given NRIC is available in the database or not
+      $row = mysqli_fetch_assoc($result);
+      // Check whether the given NRIC is available in the database or not
       if(mysqli_num_rows($result)<1){
         $hashedPassword = password_hash($password,PASSWORD_BCRYPT,array('cost'=>12));
         //insert patient data into patient table
-        $sql1 = "INSERT INTO patient(PATIENT_NAME,NRIC,ADDR) VALUES ('$fullname','$nric','$address')";
+        
+          $sql1 = "INSERT INTO patient(PATIENT_NAME,NRIC,ADDR,DOB,PHONE) VALUES ('$fullname','$nric','$address','$dob','$prefix-$phone')";
         if(mysqli_query($conn,$sql1)){
           $patient_id = mysqli_insert_id($conn);
-          $sql2 = "INSERT INTO users(EMAIL,PW,PATIENT_ID,username) VALUES('$email','$hashedPassword','$patient_id','$username')";
+          $sql2 = "INSERT INTO users(EMAIL,PW,PATIENT_ID,USERNAME) VALUES('$email','$hashedPassword','$patient_id','$username')";
           if(mysqli_query($conn,$sql2)){
             header("Location:sign_in.php");
             $_SESSION['ID'] = mysqli_insert_id($conn);
@@ -85,19 +90,6 @@ $conn->close();
   <!-- top nav bar -->
   <nav class="navbar navbar-expand-lg navbar-light top-nav hide-on-mobile ">
 
-    <!-- <script type="text/javascript">
-      function changeNationality(){
-        console.log("hello world");
-        var value = $('nationality').val();
-        if(value=="Malaysian"){
-          $('#identifier').html="<input value="96101533" id="nric" name="nric" class="form-control" placeholder="NRIC" type="text">"
-        }else{
-          console.log("how are you");
-          $('#identifier').html="<input value="" id="passport" name="passport" class="form-control" placeholder="Passport_No." type="text">"
-        }
-
-      }
-    </script> -->
     <div class="collapse navbar-collapse">
       <div class="mr-auto"></div>
       <a class="nav-link mr-2 schedule" data-toggle="modal" data-target="#appointRequest" href="#">Schedule an appointment</a>
@@ -195,19 +187,19 @@ $conn->close();
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-user"></i> </span>
               </div>
-              <input value="Dylan" id="username" name="username" class="form-control" placeholder="Username" type="text">
+              <input id="username" name="username" class="form-control" placeholder="Username" type="text">
             </div>
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-user"></i> </span>
               </div>
-              <input value="Dylan" id="name" name="name" class="form-control" placeholder="Full name" type="text">
+              <input id="name" name="name" class="form-control" placeholder="Full name" type="text">
             </div> <!-- form-group// -->
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
               </div>
-              <input value="dylansalim015@gmail.com" id="email" name="email" class="form-control" placeholder="Email address" type="email">
+              <input id="email" name="email" class="form-control" placeholder="Email address" type="email">
             </div> <!-- form-group// -->
             <div class="form-group input-group">
               <div class="input-group-prepend">
@@ -218,33 +210,38 @@ $conn->close();
                 <option value="011">011</option>
                 <option value="012">012</option>
                 <option value="013">013</option>
+                <option value="014">014</option>
+                <option value="016">016</option>
+                <option value="017">017</option>
+                <option value="018">018</option>
+                <option value="019">019</option>
               </select>
-              <input value="1873" id="phone" name="phone" class="form-control" placeholder="Phone number" type="text">
+              <input id="phone" name="phone" class="form-control" placeholder="Phone number" type="text">
             </div> <!-- form-group// -->
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fas fa-sort-numeric-up"></i> </span>
               </div>
               <select onchange="changeNationality()" id="nationality" name="nationality" class="custom-select" style="max-width: 120px;">
-                <option selected="" value="Malaysian">Malaysian</option>
+                <option selected value="Malaysian">Malaysian</option>
                 <option value="Other">Other</option>
               </select>
-              <input value="" id="nric" name="nric" class="form-control" placeholder="NRIC" type="text">
+              <input id="nric" name="nric" class="form-control" placeholder="NRIC" type="text">
 
             </div> <!-- form-group// -->
-            <div id="dob_form" style="display:none" class="form-group input-group">
+            <div id="dob_form" class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-building"></i> </span>
              </div>
 
-            <input id="datepicker" name="dob"  width="276" placeholder="Date of Birth" />
+            <input id="datepicker" name="dob" width="276" placeholder="Date of Birth" />
               </div>
 
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-building"></i> </span>
               </div>
-              <textarea  id="address" name="address" class="form-control" placeholder="Home address" type="text" rows="4">fsfdsf</textarea>
+              <textarea  id="address" name="address" class="form-control" placeholder="Home address" type="text" rows="4"></textarea>
             </div> <!-- form-group// -->
             <div class="form-group input-group">
               <div class="input-group-prepend">
@@ -260,13 +257,13 @@ $conn->close();
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
               </div>
-              <input value="12345" name="password" id="password" class="form-control" placeholder="Create password" type="password">
+              <input name="password" id="password" class="form-control" placeholder="Create password" type="password">
             </div> <!-- form-group// -->
             <div class="form-group input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
               </div>
-              <input value="12345" name="password_verify" id="password_verify" class="form-control" placeholder="Repeat password" type="password">
+              <input name="password_verify" id="password_verify" class="form-control" placeholder="Repeat password" type="password">
             </div> <!-- form-group// -->
             <div class="form-group">
               <button onclick="submitForm()" class="btn btn-primary btn-block"> Create Account  </button>
@@ -333,20 +330,11 @@ $conn->close();
     </script>
 
         <script type="text/javascript">
-        function changeNationality() {
-          var x = document.getElementById("nationality").value;
-          // console.log(x);
-          if(x=="Malaysian"){
-            document.getElementById("nric").setAttribute("placeholder","NRIC");
-                document.getElementById("dob_form").style.display = "none";
-
-        }else{
-            document.getElementById("nric").setAttribute("placeholder","PassportNo.");
-                document.getElementById("dob_form").style.display = "flex";
-          }
-}
+        
 $('#datepicker').datepicker({
+            format : 'yyyy-mm-dd',
             uiLibrary: 'bootstrap4'
+
         });
         </script>
 

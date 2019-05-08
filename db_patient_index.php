@@ -1,4 +1,6 @@
 <?php
+session_start();
+$_SESSION['page'] = "dashboard";
 require("db_patient_header.php"); ?>
  <!-- cards -->
  <section>
@@ -14,50 +16,47 @@ require("db_patient_header.php"); ?>
                   <i class="fas fa-calendar-check fa-3x text-danger"></i>
                   <div class="text-center text-secondary mx-auto">
                     <h5>Upcoming appointments</h5>
-                    <table class="table table-danger table-striped  text-center mt-2">
-                      <thead>
-                        <tr class="text-muted">
-                          <th>#</th>
-                          <th>Patient</th>
-                          <th>Doctor</th>
-                          <th>Time</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th>1</th>
-                          <td>Ali</td>
-                          <td>Dr.Abu</td>
-                          <td>9-9.45am</td>
-                        </tr>
-                        <tr>
-                          <th>2</th>
-                          <td>Lord</td>
-                          <td>Dr.Sun</td>
-                          <td>11-11.45am</td>
-                        </tr>
-                        <tr>
-                          <th>3</th>
-                          <td>Jason</td>
-                          <td>Dr.Window</td>
-                          <td>1-2.45pm</td>
-                        </tr>
-                        <tr>
-                          <th>4</th>
-                          <td>James</td>
-                          <td>Dr.Door</td>
-                          <td>4-4.45pm</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <?php
+$sql = "SELECT DESCRIPTION, DATE, TIME, STATUS FROM appointment WHERE PATIENT_ID = ANY(SELECT PATIENT_ID FROM users WHERE USER_ID = '$user_check') AND DATE>CURDATE() AND STATUS = 1  LIMIT 4 ";
+$result = mysqli_query($conn,$sql);
+  if(mysqli_num_rows($result)){
+ echo "<table class='table table-danger table-striped  text-center mt-2'>
+              <thead>
+                <tr class='text-muted'>
+                  <th>#</th>
+                  <th>Description</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+              ";
+              $i=1;
+            while($row = mysqli_fetch_assoc($result)){
+              echo "<tr>
+                  <th scope='row'>".$i."</th>
+                  <td>".$row['DESCRIPTION']."</td>
+                  <td>".$row['DATE']."</td>
+                  <td>".$row['TIME']."</td></tr>";
+                  $i++;
+            }
+                echo "
+              </tbody>
+            </table>";
+  }else{
+    echo "<div class='alert alert-info'>There is no appointment today</div>";
+  }
+ 
+                    ?>
 
+                   
 
                   </div>
                 </div>
               </div>
               <div class="card-footer text-secondary">
                 <i class="fas fa-sync mr-3"></i>
-                <span>Updated Now</span>
+                <a href="db_patient_index.php"><span>Updated Now</span></a>
               </div>
             </div>
           </div>
@@ -65,8 +64,8 @@ require("db_patient_header.php"); ?>
           <div class="col-xl-4 p-2">
             <div class="card card-common">
               <div class="card-body">
-                <p class="text-center">Press the link below to make an appointment request</p>
-                <a href="db_patient_request.html" class="btn btn-secondary btn-block">request</a>
+                <p class="text-center">Press the link below to make a new appointment request!</p>
+                <a href="db_patient_request.php" class="btn btn-info btn-block">Request Now!</a>
 
               </div>
             </div>

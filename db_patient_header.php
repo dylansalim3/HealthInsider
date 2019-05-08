@@ -1,5 +1,6 @@
 <?php
 include('check-session.php');
+$page = $_SESSION['page'];
  ?>
 
 <!doctype html>
@@ -30,23 +31,56 @@ include('check-session.php');
 
             <a href="#" class="navbar-brand text-white d-block mx-auto text-center py-3 mb-4 bottom-border">HealthInsider</a>
             <div class="bottom-border pb-3">
-              <img src="images/man.png" width="50px" height="50px" class="mr-3">
+              <img src="<?php
+              $allowed = array('jpg','jpeg','png');
+              $exist = 0;
+              foreach($allowed as $key){
+                if(file_exists("uploads/".$user_check.".".$key)){
+                  echo "uploads/".$user_check.".".$key;
+                  $exist = 1;
+                }
+              }
+              if($exist == 0){
+                echo "images/man.png";
+              }
+              ?>
+              " width="50px" height="50px" class="mr-3">
               <a href="#" class="text-white"><?php echo $login_session ?></a>
             </div>
             <ul class="navbar-nav flex-column mt-3">
-              <li class="nav-item"><a href="db_patient_index.html" class="nav-link text-white p-3 mb-3 current">
+              <li class="nav-item"><a href="db_patient_index.php" class="nav-link text-white p-3 mb-3 <?php if($page=="dashboard"){
+                echo "current";
+              }else{
+                echo "sidebar-link";
+              } ?>">
                 <i class="fas fa-home fa-lg mr-3"></i>Dashboard</a>
               </li>
-              <li class="nav-item"><a href="db_patient_profile.html" class="nav-link text-white p-3 mb-3 sidebar-link">
+              <li class="nav-item"><a href="db_patient_profile.php" class="nav-link text-white p-3 mb-3 <?php if($page=="profile"){
+                echo "current";
+              }else{
+                echo "sidebar-link";
+              } ?>">
                 <i class="fas fa-user fa-lg mr-3"></i>Profile</a>
               </li>
-              <li class="nav-item"><a href="db_patient_request.html" class="nav-link text-white p-3 mb-3 sidebar-link">
+              <li class="nav-item"><a href="db_patient_request.php" class="nav-link text-white p-3 mb-3 <?php if($page=="request"){
+                echo "current";
+              }else{
+                echo "sidebar-link";
+              } ?>">
                 <i class="fas fa-envelope-open-text fa-lg mr-3"></i>Request</a>
               </li>
-              <li class="nav-item"><a href="db_patient_medical.html" class="nav-link text-white p-3 mb-3 sidebar-link">
+              <li class="nav-item"><a href="db_patient_medical.php" class="nav-link text-white p-3 mb-3 <?php if($page=="medical"){
+                echo "current";
+              }else{
+                echo "sidebar-link";
+              } ?>">
                 <i class="fas fa-file-medical fa-lg mr-3"></i>Medical</a>
               </li>
-              <li class="nav-item"><a href="db_patient_appointment.html" class="nav-link text-white p-3 mb-3 sidebar-link">
+              <li class="nav-item"><a href="db_patient_appointment.php" class="nav-link text-white p-3 mb-3 <?php if($page=="appointment"){
+                echo "current";
+              }else{
+                echo "sidebar-link";
+              } ?>">
                 <i class="fas fa-calendar-alt fa-lg mr-3"></i>Appointment</a>
               </li>
             </ul>
@@ -58,7 +92,7 @@ include('check-session.php');
             <div class="row align-items-center">
               <div class="col-6 col-md-5">
 
-                <a class="back-landing light-color"href="index.html">Back to landing</a>
+                <a class="back-landing light-color"href="index.php">Back to landing</a>
               </div>
               <div class="col-6 col-md-7 d-flex flex-row-reverse">
                 <?php echo "<h6 style='color:white'>Welcome ".$login_session."</h6>"; ?>

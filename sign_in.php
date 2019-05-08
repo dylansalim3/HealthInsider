@@ -2,7 +2,7 @@
 session_start();
 
 // Check if the user is already logged in, if yes then redirect him to welcome page
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
+if(isset($_SESSION["ID"])){
     header("location: db_patient_index.php");
     exit();
 }
@@ -112,16 +112,16 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                         <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="about_us.html">About Us</a>
+                        <a class="nav-link" href="about_us.php">About Us</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="services.html">Our Services</a>
+                        <a class="nav-link" href="services.php">Our Services</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="news.html">News</a>
+                        <a class="nav-link" href="news.php">News</a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact Us</a>
+                        <a class="nav-link" href="contact.php">Contact Us</a>
                       </li>
 
                     </ul>
@@ -229,7 +229,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
            <p>Enter your email address and we will send you a link to reset your password.</p>
          </div>
 
-         <form>
+         <form action="reset_password.php" method="post">
             <div class="form-group">
               <input type="email" class="form-control" style="width:90%; margin: 0 auto;" id="resetEmail"  placeholder="Enter email address">
             </div>

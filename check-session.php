@@ -1,6 +1,6 @@
 <?php
 include("database-conf.php");
-session_start();
+
 
 if(!isset($_SESSION['ID'])){
    header("location:sign_in.php");

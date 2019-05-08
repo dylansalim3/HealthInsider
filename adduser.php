@@ -2,7 +2,7 @@
 session_start();
 require("database-conf.php");
 
-$fname = mysqli_real_escape($conn,$_POST['name']);
+$name = mysqli_real_escape($conn,$_POST['name']);
 $email = mysqli_real_escape($conn,$_POST['email']);
 $phone = mysqli_real_escape($conn,$_POST['phone']);
 $nric = mysqli_real_escape($conn,$_POST['age']);
