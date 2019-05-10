@@ -1,5 +1,6 @@
 <?php
- require("index-header.php");
+  $nav = "about us";
+  require("index-header.php");
 ?>
 
     </div> -->

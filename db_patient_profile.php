@@ -32,6 +32,8 @@ if($_SERVER['REQUEST_METHOD']=='POST')  {
     array_push($error,"Empty New Password field! Please insert values!");
   }else if(empty($fullname)||empty($date)&&empty($address)&&empty($phone)){
     array_push($error,'Empty Field! Please Try Again!');
+  }else if(!$uppercase || !$lowercase || !$number || strlen($password) < 8){
+    array_push($error,'Weak Password! Please Try Again!');  
   }else{
     $password = $row['PW'];
     if(!empty($passwordNew1)){

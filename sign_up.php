@@ -6,10 +6,11 @@ if(isset($_SESSION["ID"])){
     header("location: db_patient_index.php");
     exit();
 }
-
+include_once("index-header.php");
 include("database-conf.php");
 
-// Define variables and initialize with empty values
+// $emptyError = $usernameError = $passwordNotMatchError = $weakPasswordError = $phoneError = $nricError = false; 
+  
 if($_SERVER["REQUEST_METHOD"]=="POST"){
   $username = $_POST['username'];
   $fullname = $_POST['name'];
@@ -23,12 +24,43 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
   $password = $_POST['password'];
   $verify_password = $_POST['password_verify'];
   $dob = $_POST['dob'];
-  print_r($dob);
 
-  if(empty($username)||empty($password)||empty($nric)){
-    header("Location:sign_up.php?error=emptyfields");
-    exit();
-  }else{
+  $uppercase = preg_match('@[A-Z]@', $password);
+  $lowercase = preg_match('@[a-z]@', $password);
+  $number    = preg_match('@[0-9]@', $password);
+  $error = array();
+  $valid=true;
+  if(empty($username)||empty($fullname)||empty($email)||empty($phone)||empty($nationality)||empty($address)||empty($gender)||empty($password)||empty($verify_password)||empty($nric)||empty($dob)){
+    array_push($error,"Empty field! Please insert values!");
+    // $emptyError=true;
+    $valid=false;
+  }
+  if ( !preg_match('/^[a-z0-9_-]{5,30}$/', $username) ){
+    array_push($error,"Username must consist of 5-32 words,must start with letter and only letters and numbers allowed! Please Try Again!");
+    // $passwordNotMatchError=true;
+    $valid=false;
+  }
+  if($password!=$verify_password){
+    array_push($error,"Both Password Not Match! Please Try Again!");
+    // $usernameError=true;
+    $valid=false;
+  }
+  if(!$uppercase || !$lowercase || !$number || strlen($password) < 8){
+    array_push($error,'Weak Password! Please Try Again!');   
+    // $weakPasswordError=true;
+    $valid=false;
+  }
+  if(!preg_match('/^[0-9]+$/',$phone) || strlen($phone)<7||strlen($phone)>8){
+    array_push($error,'Incorrect phone number! Please Try Again!');
+    // $phoneError=true;
+    $valid=false;
+  }
+  if((!preg_match('/^[0-9]+$/',$nric) || strlen($nric)!=12) && $nationality=="Malaysian"){
+    array_push($error,'Incorrect NRIC format! Please Try Again!');
+    // $nricError=true;
+    $valid=false;
+  }  
+  if($valid==true){
 
     $sql = "SELECT p.nric FROM users u JOIN patient p ON p.PATIENT_ID = u.PATIENT_ID WHERE nric=?";
     $stmt = mysqli_stmt_init($conn);
@@ -46,7 +78,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         $hashedPassword = password_hash($password,PASSWORD_BCRYPT,array('cost'=>12));
         //insert patient data into patient table
         
-          $sql1 = "INSERT INTO patient(PATIENT_NAME,NRIC,ADDR,DOB,PHONE) VALUES ('$fullname','$nric','$address','$dob','$prefix-$phone')";
+          $sql1 = "INSERT INTO patient(PATIENT_NAME,NRIC,ADDR,DOB,PHONE,GENDER) VALUES ('$fullname','$nric','$address','$dob','$prefix-$phone','$gender')";
         if(mysqli_query($conn,$sql1)){
           $patient_id = mysqli_insert_id($conn);
           $sql2 = "INSERT INTO users(EMAIL,PW,PATIENT_ID,USERNAME) VALUES('$email','$hashedPassword','$patient_id','$username')";
@@ -67,94 +99,6 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 $conn->close();
  ?>
 
-<!doctype html>
-<html lang="en">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="shortcut icon" href="images/logo.png" type="image/x-icon" />
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <!-- Main css for all pages -->
-  <link rel="stylesheet" href="css\main.css">
-  <!-- Font awesome CDN -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-
-   <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-
-  <title>HealthInsider</title>
-</head>
-
-<body>
-  <!-- top nav bar -->
-  <nav class="navbar navbar-expand-lg navbar-light top-nav hide-on-mobile ">
-
-    <div class="collapse navbar-collapse">
-      <div class="mr-auto"></div>
-      <a class="nav-link mr-2 schedule" data-toggle="modal" data-target="#appointRequest" href="#">Schedule an appointment</a>
-      <i class="fas fa-sign-in-alt mr-2"><a class="mr-2" href="sign_in.php"> Sign In</a></i>
-      <i class="fas fa-user-plus mr-2"><a class="mr-3" href="sign_up.php"> Sign Up</a></i>
-    </div>
-
-  </nav>
-  <!-- top nav bar ends -->
-  <nav class="navbar navbar-expand-lg my-background-2 navbar-dark">
-    <div class="container">
-      <button class="navbar-toggler" style="color:#fff" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0 ">
-          <!-- <ul class="nav nav-pills nav-fill w-100"> -->
-
-            <li class="nav-item active">
-              <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="about_us.html">About Us</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="services.html">Our Services</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="news.html">News</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="contact.html">Contact Us</a>
-            </li>
-
-          </ul>
-          </div>
-        </div>
-      </nav>
-
-      <!-- start of modal for appointment request -->
-      <!-- modal -->
-      <div class="modal fade" id="appointRequest">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Make an appointment?</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-             <p>Sign in to make an appointment</p>
-           </div>
-           <div class="modal-footer">
-             <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-             <button type="button" class="btn btn-secondary"><a class="text-white" href="sign_up.html" style="text-decoration:none;">Sign up</a></button>
-             <button type="button" class="btn btn-info"><a class="text-white" href="sign_in.html" style="text-decoration:none;">Already has an account?</a></button>
-           </div>
-         </div>
-       </div>
-     </div>
-     <!-- end of modal -->
-     <!-- modal of appointment request ends -->
-
 
      <div class="container-fluid">
       <div class="card bg-light">
@@ -170,7 +114,16 @@ $conn->close();
           </p>
           <div id="add_err"></div>
           <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-            <?php  if(isset($_GET['error'])){
+            <?php  
+            if(!empty($error)){
+              echo "<div class='alert alert-danger'>";
+              forEach($error as $e){
+                echo $e;
+              }
+              echo "</div>";
+              }
+            
+            if(isset($_GET['error'])){
               echo "<div class='alert alert-warning'>";
               if($_GET['error']=="emptyfields"){
                 echo "Please fill the required details";
@@ -234,7 +187,7 @@ $conn->close();
                 <span class="input-group-text"> <i class="fa fa-building"></i> </span>
              </div>
 
-            <input id="datepicker" name="dob" width="276" placeholder="Date of Birth" />
+             <input type="date" class="form-control" name="dob" width="276" placeholder="Date of Birth" />
               </div>
 
             <div class="form-group input-group">
@@ -248,8 +201,8 @@ $conn->close();
                 <span class="input-group-text"> <i class="fas fa-venus-mars"></i> </span>
               </div>
               <select id="gender" name="gender" class="form-control">
-                <option> Select gender</option>
-                <option selected="">Male</option>
+                <option selected=""> Select gender</option>
+                <option>Male</option>
                 <option>Female</option>
               </select>
             </div> <!-- form-group end.// -->
@@ -326,18 +279,5 @@ $conn->close();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-
-    </script>
-
-        <script type="text/javascript">
-        
-$('#datepicker').datepicker({
-            format : 'yyyy-mm-dd',
-            uiLibrary: 'bootstrap4'
-
-        });
-        </script>
-
-
   </body>
   </html>

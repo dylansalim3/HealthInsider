@@ -1,3 +1,4 @@
+<?php ob_start();?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -40,25 +41,22 @@
                   <ul class="navbar-nav mr-auto mt-2 mt-lg-0 ">
                     <!-- <ul class="nav nav-pills nav-fill w-100"> -->
 
-                      <li class="nav-item active">
+                      <li class="nav-item <?php echo $nav=="index" ? "active" : "" ?>">
                         <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item <?php echo $nav=="about us" ? "active" : "" ?>">
                         <a class="nav-link" href="about_us.php">About Us</a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item <?php echo $nav=="services" ? "active" : "" ?>">
                         <a class="nav-link" href="services.php">Our Services</a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item <?php echo $nav=="news" ? "active" : "" ?>">
                         <a class="nav-link" href="news.php">Articles</a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item <?php echo $nav=="contact" ? "active" : "" ?>">
                         <a class="nav-link" href="contact.php">Contact Us</a>
                       </li>
-
                     </ul>
-          <!-- <i class="fas fa-sign-in-alt mr-2"><a href="#"> Sign In</a></i>
-            <i class="fas fa-user-plus mr-2"><a href="#"> Sign Up</a></i> -->
           </div>
         </div>
       </nav>
@@ -79,7 +77,7 @@
            </div>
            <div class="modal-footer">
              <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-             <button type="button" class="btn btn-secondary"><a class="text-white" href="sign_up.html" style="text-decoration:none;">Sign up</a></button>
+             <button type="button" class="btn btn-secondary"><a class="text-white" href="sign_up.php" style="text-decoration:none;">Sign up</a></button>
              <button type="button" class="btn btn-info"><a class="text-white" href="sign_in.php" style="text-decoration:none;">Already has an account?</a></button>
            </div>
          </div>
@@ -87,13 +85,3 @@
      </div>
      <!-- end of modal -->
      <!-- modal of appointment request ends -->
-
-     <!-- bg starts -->
-     <div class="mycontainer">
-       <img class="img-fluid" src="images\bg1.jpg" >
-       <div class="centered">
-        <h1>The Most Valuable Thing Is Your Health</h1>
-        <p style="color: #818189">We care about your health. HealthInsider provides primary health care services to everyone. </p>
-      </div>
-    </div>
-    <!-- bg ends -->

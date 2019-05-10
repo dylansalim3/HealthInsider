@@ -1,7 +1,7 @@
 <?php
+session_start();
 require("fpdf/fpdf.php");
-
-require("database-conf.php");
+require('check-session.php');
 
 class PDF extends FPDF
 {
@@ -209,7 +209,7 @@ $pdf->Cell(80,8,"Patient Personal Information",0,1,"L");
 
 //patientID
 $pdf->Ln(3);
-$patient_id = mysqli_query($conn, "SELECT PATIENT_ID FROM users WHERE USER_ID = '7'") or die("database error:".mysqli_error($conn));
+$patient_id = mysqli_query($conn, "SELECT PATIENT_ID FROM users WHERE USER_ID = '$user_check'") or die("database error:".mysqli_error($conn));
 $patient_id = mysqli_fetch_row($patient_id);
 $patient_id = $patient_id[0];
 $pdf->SetFont("Arial","B",10);

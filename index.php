@@ -1,7 +1,16 @@
 <?php
+$nav = "index";
  require("index-header.php");
 ?>
-
+<!-- bg starts -->
+<div class="mycontainer">
+       <img class="img-fluid" src="images\bg1.jpg" >
+       <div class="centered">
+        <h1>The Most Valuable Thing Is Your Health</h1>
+        <p style="color: #818189">We care about your health. HealthInsider provides primary health care services to everyone. </p>
+      </div>
+    </div>
+    <!-- bg ends -->
     <div class="container-fluid mt-5">
       <div class="container">
        <div class="row">

@@ -1,4 +1,6 @@
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
 <?php
+
 session_start();
 
 // Check if the user is already logged in, if yes then redirect him to welcome page
@@ -6,7 +8,7 @@ if(isset($_SESSION["ID"])){
     header("location: db_patient_index.php");
     exit();
 }
-
+include_once("index-header.php");
 include("database-conf.php");
 
 // Define variables and initialize with empty values
@@ -32,19 +34,19 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
       //Check whether the result is empty or not
       if($row = mysqli_fetch_assoc($result)){
-        $pwcheck = password_verify($password,$row['PW']);
-        if(!pwcheck){
+        $pw = $row['PW'];
+        var_dump($password,$pw);
+        $pwcheck = password_verify($password,$pw);
+        if(!$pwcheck){
           header("Location: sign_in.php?error=wrongpwd");
           exit();
         }else{
 
-          $_SESSION['ID'] = $row['USER_ID'];
-
-          if($role=="Staff" && $row['STAFF_ID']!=null){
+          if($role=="Staff" && !empty($row['STAFF_ID'])){
             $_SESSION['ID'] = $row['USER_ID'];
             header("Location:db_staff_index.php");
             exit();
-          }else if($role=="Patient" && $row['PATIENT_ID']!=null){
+          }else if($role=="Patient" && !empty($row['PATIENT_ID'])){
             $_SESSION['ID'] = $row['USER_ID'];
             header("Location:db_patient_index.php");
             exit();
@@ -64,70 +66,21 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 }
 
+if(isset($_GET['resetError'])||isset($_GET['reset'])){
+  ?>
 
+
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $('#forgetps').modal('show');
+});
+  
+  </script>
+  <?php
+}
  ?>
 
-<!doctype html>
-<html lang="en">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="shortcut icon" href="images/logo.png" type="image/x-icon" />
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <!-- Main css for all pages -->
-  <link rel="stylesheet" href="css\main.css">
-  <!-- Font awesome CDN -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-  <title>HealthInsider</title>
-</head>
-
-<body>
-  <!-- top nav bar -->
-  <nav class="navbar navbar-expand-lg navbar-light top-nav hide-on-mobile ">
-
-
-    <div class="collapse navbar-collapse">
-      <div class="mr-auto"></div>
-      <a class="nav-link mr-2 schedule" data-toggle="modal" data-target="#appointRequest" href="#">Schedule an appointment</a>
-
-                <i class="fas fa-sign-in-alt mr-2"><a class="mr-2" href="sign_in.php"> Sign In</a></i>
-                <i class="fas fa-user-plus mr-2"><a class="mr-3" href="sign_up.php"> Sign Up</a></i>
-              </div>
-
-            </nav>
-  <!-- top nav bar ends -->
-            <nav class="navbar navbar-expand-lg my-background-2 navbar-dark">
-              <div class="container">
-                <button class="navbar-toggler" style="color:#fff" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                  <ul class="navbar-nav mr-auto mt-2 mt-lg-0 ">
-                    <!-- <ul class="nav nav-pills nav-fill w-100"> -->
-
-                      <li class="nav-item active">
-                        <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="about_us.php">About Us</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="services.php">Our Services</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="news.php">News</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="contact.php">Contact Us</a>
-                      </li>
-
-                    </ul>
-          </div>
-        </div>
-      </nav>
+      
 
       <div class="container-fluid">
 
@@ -148,8 +101,10 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                   echo "<div class='alert alert-warning'>";
                   if($_GET['error']=="emptyfields"){
                     echo "Please fill the required details";
-                  }else{
+                  }else if($_GET['error']=="wrongcredential"){
                     echo "Please select the correct credential";
+                  }else if($_GET['error']=="wrongpwd"){
+                    echo "Please select the correct password";
                   }
                   echo "</div>";
                 }?>
@@ -157,14 +112,14 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
                 <div class="input-group-prepend">
                   <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                 </div>
-                <input name="email" value="dylansalim015@gmail.com" class="form-control" placeholder="Enter your email" type="text">
+                <input name="email" class="form-control" placeholder="Enter your email" type="text">
               </div> <!-- form-group// -->
 
               <div class="form-group input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                 </div>
-                <input name="password" value="96101530" class="form-control" placeholder="Enter your password" type="password">
+                <input name="password" class="form-control" placeholder="Enter your password" type="password">
               </div> <!-- form-group// -->
               <div class="form-group input-group">
 
@@ -182,7 +137,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
               <div class="form-group">
                 <button id="mybut" type="submit" class="btn btn-primary btn-block"><a class="text-white" id="my-link" style="text-decoration:none;" >Sign in</a>  </button>
               </div> <!-- form-group// -->
-              <p class="text-center"><a data-toggle="modal" href="#forgetps">Forgot password?</a> | <a href="sign_up.php">Already a user?</a></p>
+              <p class="text-center"><a data-toggle="modal" href="#forgetps">Forgot password?</a> | <a href="sign_up.php">New User?</a></p>
           </form>
         </article>
       </div> <!-- card.// -->
@@ -207,7 +162,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
            <div class="modal-footer">
              <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
              <button type="button" class="btn btn-secondary"><a class="text-white" href="sign_up.html" style="text-decoration:none;">Sign up</a></button>
-             <button type="button" class="btn btn-info"><a class="text-white" href="sign_in.html" style="text-decoration:none;">Already has an account?</a></button>
+             <button type="button" class="btn btn-info"><a class="text-white" href="sign_in.html" style="text-decoration:none;">Create new account</a></button>
            </div>
          </div>
        </div>
@@ -226,19 +181,48 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
             </button>
           </div>
           <div class="modal-body">
+            <?php
+            if(isset($_GET['reset'])){
+              if($_GET['reset']=="success"){
+              ?>
+              
+              <div class="alert alert-info">Email sent! Please check your mail.</div>
+              <?php
+              }
+            }
+              
+              if(isset($_GET['resetError'])){
+                if($_GET['resetError']=="databaseError"){
+                  ?>
+                  <div class="alert alert-warning">Database Error! Please try again later.</div>
+                  <?php
+                }else if($_GET['resetError']=="emailNotExist"){
+                  ?>
+                  <div class="alert alert-warning">User Exist! Please try again later.</div>
+                  <?php
+                }else{
+                  ?>
+                  <div class="alert alert-warning">Failed to send the email! Please try again later.</div>
+                  <?php
+                }
+               
+              
+            }
+            ?>
            <p>Enter your email address and we will send you a link to reset your password.</p>
          </div>
 
-         <form action="reset_password.php" method="post">
+         <form action="request_reset_password.php" method="POST">
             <div class="form-group">
-              <input type="email" class="form-control" style="width:90%; margin: 0 auto;" id="resetEmail"  placeholder="Enter email address">
+              <input type="email" name="email" class="form-control" style="width:90%; margin: 0 auto;" id="resetEmail" placeholder="Enter email address">
             </div>
-         </form>
-
          <div class="modal-footer">
            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-           <button type="button" class="btn btn-primary" data-dismiss="modal">Send password reset email</button>
+           <button type="submit" class="btn btn-primary" name="reset-password-btn" >Send password reset email</button>
          </div>
+         </form>
+
+         
        </div>
      </div>
    </div>
@@ -290,7 +274,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
