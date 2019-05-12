@@ -2,7 +2,7 @@
 session_start();  
 $_SESSION['page'] = "request";
 require("db_patient_header.php");
-$sql = "SELECT SPECIALIZATION FROM doctor";
+$sql = "SELECT DISTINCT SPECIALIZATION FROM doctor";
 $result = mysqli_query($conn,$sql);
 
 ?>

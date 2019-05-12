@@ -187,7 +187,7 @@ $conn->close();
                 <span class="input-group-text"> <i class="fa fa-building"></i> </span>
              </div>
 
-             <input type="date" class="form-control" name="dob" width="276" placeholder="Date of Birth" />
+             <input type="text" class="form-control" name="dob" width="276" onfocus="(this.type='date')" placeholder="Date of Birth" />
               </div>
 
             <div class="form-group input-group">
