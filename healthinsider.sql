@@ -6,6 +6,8 @@
 -- Generation Time: May 10, 2019 at 06:06 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
+use health_insider;
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -149,8 +151,8 @@ CREATE TABLE `patient` (
 --
 
 INSERT INTO `patient` (`PATIENT_ID`, `PATIENT_NAME`, `DOB`, `NRIC`, `ADDR`, `HEIGHT`, `WEIGHT`, `LDC`, `SYSTOLIC`, `HEART_RATE`, `WARD_ID`, `PHONE`, `GENDER`, `DIASTOLIC`) VALUES
-(15, 'Dylan Salim', '1996-10-15', '961015305003', 'No. 17', NULL, NULL, NULL, NULL, NULL, NULL, '017-1234567', 1, 0),
-(16, 'David', '1997-08-09', '121231041234', 'No.10', NULL, NULL, NULL, NULL, NULL, NULL, '010-1234567', 1, 0);
+(15, 'Patient 1', '1996-10-18', 'test123', 'No. 17', NULL, NULL, NULL, NULL, NULL, NULL, '017-1234567', 1, 0),
+(16, 'David', '1997-08-09', 'test123', 'No.10', NULL, NULL, NULL, NULL, NULL, NULL, '010-1234567', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -193,8 +195,8 @@ CREATE TABLE `reset_pw` (
 --
 
 INSERT INTO `reset_pw` (`RESET_PW_ID`, `RESET_PW_EMAIL`, `RESET_PW_SELECTOR`, `RESET_PW_TOKEN`, `RESET_PW_EXPIRES`) VALUES
-(0, 'dylansalim3@hotmail.com', '527e0788faff77fc', '$2y$12$Y6PgDFIo4ZdZH0h5p/40C.GdX51N.u4.FoCho5Qkocbi1LZIpJzp6', '1557444849'),
-(0, 'dylansalim015@gmail.com', '9b04aa6457521a02', '$2y$12$tDR.Bteys9de16GKywsrRekSe5l26zKLYZcg7sLnZGg.apOipYv9K', '1557514499');
+(0, 'anything@hotmail.com', '527e0788faff77fc', '$2y$12$Y6PgDFIo4ZdZH0h5p/40C.GdX51N.u4.FoCho5Qkocbi1LZIpJzp6', '1557444849'),
+(0, 'whatsoever@gmail.com', '9b04aa6457521a02', '$2y$12$tDR.Bteys9de16GKywsrRekSe5l26zKLYZcg7sLnZGg.apOipYv9K', '1557514499');
 
 -- --------------------------------------------------------
 
@@ -233,8 +235,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`USER_ID`, `EMAIL`, `PW`, `STAFF_ID`, `PATIENT_ID`, `USERNAME`) VALUES
-(7, 'dylansalim015@gmail.com', '$2y$12$3sF1ZAePyG3AMxvO1xF9WeGY2xaLol3/rCSEXKLGBX8HMOp1LaEFq', NULL, 15, 'Dylan'),
-(8, 'dylansalim3@email.com', '$2y$12$Z5.Vl/yNqlYMegHJm8cArugEqHlcyw0Nqo3BylPTviwBm1I1U86L6', NULL, 16, 'david_tan');
+(7, 'user1@gmail.com', '$2y$12$GOnxyOGSh.gx94ylXZY1Fue9YciBT4/7KElQn8B3R2Pnlh6RQ/Mfy', NULL, 15, 'User1'),
+(8, 'user2@email.com', '$2y$12$GOnxyOGSh.gx94ylXZY1Fue9YciBT4/7KElQn8B3R2Pnlh6RQ/Mfy', NULL, 16, 'david_tan');
 
 -- --------------------------------------------------------
 
@@ -396,6 +398,5 @@ ALTER TABLE `ward`
   ADD CONSTRAINT `ward_ibfk_1` FOREIGN KEY (`PATIENT_ID`) REFERENCES `patient` (`PATIENT_ID`);
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+INSERT INTO health_insider.users (USER_ID,EMAIL,PW,STAFF_ID,PATIENT_ID,USERNAME) VALUES (9,'staff1@gmail.com','$2y$12$GOnxyOGSh.gx94ylXZY1Fue9YciBT4/7KElQn8B3R2Pnlh6RQ/Mfy',1,null,'michelle_lee')
+INSERT INTO health_insider.staff (STAFF_ID,STAFF_NAME,DOB,NRIC,ADDR,CONTACT,GENDER,PROFILE_PIC) VALUES(1,"STAFF 1","2008-08-09","961114890909","0123456789",1,"https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg");

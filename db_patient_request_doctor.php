@@ -13,7 +13,7 @@ if(isset($_GET['specialization'])){
 }
 if(isset($_GET['doctor'])&&!isset($_GET['date'])){
   $doctor = $_GET['doctor'];
-  $sql2 = "SELECT DISTINCT DOCTOR_DAY FROM doctor_slot WHERE DOCTOR_ID = ANY(SELECT DOCTOR_ID FROM doctor WHERE DOCTOR_NAME = '$doctor');";
+  $sql2 = "SELECT DISTINCT DOCTOR_DAY FROM doctor_slot WHERE DOCTOR_ID = ANY(SELECT DOCTOR_ID FROM doctor WHERE DOCTOR_NAME = '$doctor') AND STATUS = 1 AND DOCTOR_DAY>CURDATE();";
   $result2 = mysqli_query($conn,$sql2);
   echo "<option>Select Date</option>";
   if(isset($result2) && mysqli_num_rows($result2)>0){

@@ -8,8 +8,8 @@ if(isset($_POST['reset-password-btn'])){
 	
 	
 	$url = $_SERVER['HTTP_HOST'] . "/healthInsider/forgot_password.php?selector=".$selector."&validator=". bin2hex($token);
-	//the token expired in 3 hours
-	$expires = date("U") +10800;
+	//the token expired in 1 hours
+	$expires = date("U") +3600;
 
 	require('database-conf.php');
 
@@ -17,7 +17,7 @@ if(isset($_POST['reset-password-btn'])){
 	$sql = "SELECT EMAIL FROM users WHERE EMAIL = ?";
 	$stmt = mysqli_stmt_init($conn);
 	if(!mysqli_stmt_prepare($stmt,$sql)){
-		header('Location:sign.php?resetError=databaseError');
+		header('Location:sign_in.php?resetError=databaseError');
 		exit();
 	}else{
 		mysqli_stmt_bind_param($stmt,"s",$userEmail);
@@ -32,7 +32,7 @@ if(isset($_POST['reset-password-btn'])){
 	$sql = "DELETE FROM reset_pw WHERE RESET_PW_EMAIL = ?";
 	$stmt = mysqli_stmt_init($conn);
 	if(!mysqli_stmt_prepare($stmt,$sql)){
-		header('Location:sign.php?resetError=databaseError');
+		header('Location:sign_in.php?resetError=databaseError');
 		exit();
 	}else{
 		mysqli_stmt_bind_param($stmt,"s",$userEmail);
@@ -43,7 +43,7 @@ if(isset($_POST['reset-password-btn'])){
 	$sql = "INSERT INTO reset_pw (RESET_PW_EMAIL,RESET_PW_SELECTOR,RESET_PW_TOKEN,RESET_PW_EXPIRES) VALUES (?,?,?,?);";
 	$stmt = mysqli_stmt_init($conn);
 	if(!mysqli_stmt_prepare($stmt,$sql)){
-		header('Location:sign.php?resetError=databaseError');
+		header('Location:sign_in.php?resetError=databaseError');
 		exit();
 	}else{
 		$hashedToken = password_hash($token,PASSWORD_BCRYPT,array('cost'=>12));
@@ -70,7 +70,7 @@ if(isset($_POST['reset-password-btn'])){
 
 	header("Location:sign_in.php?reset=success");
 }else{
-	header('Location:sign.php?resetError=databaseError');
+	header('Location:sign_in.php?resetError=databaseError');
 }
 
 ?>

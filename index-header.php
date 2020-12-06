@@ -18,12 +18,12 @@
 
 <body>
   <!-- top nav bar -->
-  <nav class="navbar navbar-expand-lg navbar-light top-nav hide-on-mobile ">
+  <nav class="navbar navbar-expand-sm navbar-light top-nav ">
 
 
     <div class="collapse navbar-collapse">
       <div class="mr-auto"></div>
-      <a class="nav-link mr-2 schedule" data-toggle="modal" data-target="#appointRequest" href="#">Schedule an appointment</a>
+      <a class="nav-link mr-2 schedule" data-toggle="modal" data-target="#appointRequest" href="sign_in.php">Schedule an appointment</a>
 
                 <i class="fas fa-sign-in-alt mr-2"><a class="mr-2" href="sign_in.php"> Sign In</a></i>
                 <i class="fas fa-user-plus mr-2"><a class="mr-3" href="sign_up.php"> Sign Up</a></i>
@@ -56,9 +56,14 @@
                       <li class="nav-item <?php echo $nav=="contact" ? "active" : "" ?>">
                         <a class="nav-link" href="contact.php">Contact Us</a>
                       </li>
-                    </ul>
+                      </ul>
           </div>
+          
         </div>
+        
+        <!-- <i class="fas fa-sign-in-alt mr-2"><a class="mr-2" href="sign_in.php"> Sign In</a></i>
+                <i class="fas fa-user-plus mr-2"><a class="mr-3" href="sign_up.php"> Sign Up</a></i> -->
+                    
       </nav>
 
       <!-- start of modal for appointment request -->

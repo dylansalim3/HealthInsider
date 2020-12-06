@@ -8,10 +8,10 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['reset-password-btn'])){
 	$repeatPassword = $_POST['rpassword'];
 	#check password
 	if(empty($password)||empty($repeatPassword)){
-		header('Location:forgot_password.php?selector=$selector&validator=$validator&error=emptyField');
+		header('Location:forgot_password.php?selector='.$selector.'&validator='.$validator.'&error=emptyField');
 		exit();
 	}else if($password!=$repeatPassword){
-		header('Location:forgot_password.php?error=unequalPassword');
+		header('Location:forgot_password.php?selector='.$selector.'&validator='.$validator.'&error=unequalPassword');
 		exit();
 	}
 
@@ -22,7 +22,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['reset-password-btn'])){
 	$sql = "SELECT * FROM reset_pw WHERE RESET_PW_SELECTOR = ? AND RESET_PW_EXPIRES >= ".$currentDate.";";
 	$stmt = mysqli_stmt_init($conn);
 	if(!mysqli_stmt_prepare($stmt,$sql)){
-		header('Location:forgot_password.php?selector=$selector&validator=$validator&error=database');
+		header('Location:forgot_password.php?selector='.$selector.'&validator='.$validator.'&error=database');
 		exit();
 	}else{
 		mysqli_stmt_bind_param($stmt,'s',$selector);
@@ -40,7 +40,7 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['reset-password-btn'])){
 			$tokenCheck = password_verify($tokenBin, $row['RESET_PW_TOKEN']);
 
 			if($tokenCheck == false){
-				header('Location:forgot_password.php?selector=$selector&validator=$validator&error=invalidLink');
+				header('Location:forgot_password.php?selector='.$selector.'&validator='.$validator.'&error=invalidLink');
 				exit();
 
 			}else if($tokenCheck == true){
@@ -53,20 +53,21 @@ if($_SERVER['REQUEST_METHOD']=='POST' && isset($_POST['reset-password-btn'])){
 					$pw = $row['PW'];
 					var_dump($password,$pw);
 					if(password_verify($password,$pw)== true){
-						print_r("same password");
+						header('Location:forgot_password.php?selector='.$selector.'&validator='.$validator.'&error=samePassword');
+							exit();
 					}else{
 						$hashedPassword = password_hash($password,PASSWORD_BCRYPT,array('cost'=>12));
 						$sql = "UPDATE users SET PW='$hashedPassword' WHERE EMAIL='$tokenEmail';";
 						if(!mysqli_query($conn,$sql)){
-							header('Location:forgot_password.php?selector=$selector&validator=$validator&error=database');
+							header('Location:forgot_password.php?selector='.$selector.'&validator='.$validator.'&error=database');
 							exit();
 						}else{
-							header('Location:forgot_password.php?selector=$selector&validator=$validator&success=true');
+							header('Location:forgot_password.php?selector='.$selector.'&validator='.$validator.'&success=true');
 							exit();							
 						}
 					}
 				}else{
-					header('Location:forgot_password.php?selector=$selector&validator=$validator&error=invalidRequest');
+					header('Location:forgot_password.php?selector='.$selector.'&validator='.$validator.'&error=invalidRequest');
 							exit();
 				}
 

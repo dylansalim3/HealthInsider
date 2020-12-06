@@ -101,12 +101,11 @@ function showTime(str) {
                     $time = $_POST["time"];
                     $description = $_POST["description"];
 
-                    $sql4 = "INSERT INTO appointment (PATIENT_ID,REASON,DATE,TIME,DOCTOR_ID,STATUS)
+                    $sql4 = "INSERT INTO appointment (PATIENT_ID,DESCRIPTION,DATE,TIME,DOCTOR_ID,STATUS)
                   SELECT u.PATIENT_ID,'$description','$date','$time',d.DOCTOR_ID,'2' FROM users u,
                   doctor d WHERE u.USER_ID = '$user_check' AND d.DOCTOR_NAME = '$doctor' ";
                   
                   if(mysqli_query($conn,$sql4)){
-
                         echo "<div class='alert alert-info'>Appointment Request sent! </div>";
                       }else{
                       echo "<div class='alert alert-info'>Appointment Request Failed! Please Try Again! </div>";

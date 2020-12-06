@@ -10,32 +10,32 @@
 }
 
 .sidebar-link {
-  transition: all .4s;
+  transition: all 0.4s;
 }
 
 /* end of navbar */
 
-body{
+body {
   background-color: #eee;
 }
 
-.sidebar-link{
-  transition: all .5s;
+.sidebar-link {
+  transition: all 0.5s;
 }
 
-.sidebar-link:hover{
+.sidebar-link:hover {
   background-color: #f44336;
   border-radius: 5px;
 }
 
-.current{
+.current {
   background-color: #f44336;
   border-radius: 7px;
   box-shadow: 2px 2px 2px #111;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
-.current:hover{
+.current:hover {
   background-color: #f66436;
   border-radius: 7px;
   box-shadow: 2px 5px 10px #111;
@@ -43,79 +43,88 @@ body{
 }
 
 /*when larger than 576px*/
-@media (min-width: 576px){
-.modal-dialog {
-  max-width: 1100px;
-}
-#small-dialog{
-  max-width: 500px;
-}
-.fc-content{
-  font-size: 17px;
-}
-}
-@media (max-width:992px){
-  .fc-content{
-  font-size: 11px;
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 1100px;
   }
-  .fc-center{
+
+  #small-dialog {
+    max-width: 500px;
+  }
+
+  .fc-content {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 992px) {
+  .fc-content {
+    font-size: 11px;
+  }
+
+  .fc-center {
     font-size: 13px;
   }
-  .fc-button-group{
+
+  .fc-button-group {
     font-size: 12px;
   }
-  .fc-button-primary{
-    font-size: 12px!important;
+
+  .fc-button-primary {
+    font-size: 12px !important;
   }
 }
+
 /*when smaller than 768px*/
-@media (max-width:768px){
-  .sidebar{
+@media (max-width: 768px) {
+  .sidebar {
     position: static;
     height: auto;
   }
-  .top-navbar{
+
+  .top-navbar {
     position: static;
   }
-  .fc-content{
-  font-size: 11px;
+
+  .fc-content {
+    font-size: 11px;
   }
-  .fc-center{
+
+  .fc-center {
     font-size: 13px;
   }
-  .fc-button-group{
+
+  .fc-button-group {
     font-size: 12px;
   }
-  .fc-button-primary{
-    font-size: 12px!important;
+
+  .fc-button-primary {
+    font-size: 12px !important;
   }
 }
 
-
-
-.back-landing:hover{
+.back-landing:hover {
   text-decoration: none;
-  color:#f44336;
+  color: #f44336;
 }
 
-
-.light-color{
-  color:#fff;
+.light-color {
+  color: #fff;
   font-size: 1.3em;
 }
 
 /* cards */
 .card-common {
   box-shadow: 1px 2px 5px #999;
-  transition: all .4s;
+  transition: all 0.4s;
 }
 
 .card-common:hover {
   box-shadow: 2px 3px 15px #999;
   transform: translateY(-1px);
 }
-/* end of cards */
 
+/* end of cards */
 
 .divider-text {
   position: relative;
@@ -123,12 +132,14 @@ body{
   margin-top: 15px;
   margin-bottom: 15px;
 }
+
 .divider-text span {
   padding: 7px;
   font-size: 12px;
-  position: relative;   
+  position: relative;
   z-index: 2;
 }
+
 .divider-text:after {
   content: "";
   position: absolute;
@@ -139,35 +150,34 @@ body{
   z-index: 1;
 }
 
-
-.page-link{
-  color:#423d61;
+.page-link {
+  color: #423d61;
 }
 
-.active-2{
-  background-color:#423d61;
+.active-2 {
+  background-color: #423d61;
   color: white;
   border-color: #423d61;
 }
 
-.fc-day-grid-event .fc-time{
-  font-weight: 400!important;
+.fc-day-grid-event .fc-time {
+  font-weight: 400 !important;
 }
 
-.fc-day-grid-event .fc-content{
-  white-space: unset!important;
+.fc-day-grid-event .fc-content {
+  white-space: unset !important;
 }
 
-.fc-unthemed td.fc-today{
-  background: #ffef9a!important;
+.fc-unthemed td.fc-today {
+  background: #ffef9a !important;
 }
 
-.fc-button-primary{
-  background-color: #423d61!important;
+.fc-button-primary {
+  background-color: #423d61 !important;
 }
 
-.fc-button-active{
-  background: #504694!important;
+.fc-button-active {
+  background: #504694 !important;
 }
 
 /* clear bootstrap style */

@@ -12,41 +12,68 @@ if(mysqli_num_rows($result)){
   $row = mysqli_fetch_assoc($result);
 
 if($_SERVER['REQUEST_METHOD']=='POST')  { 
-  $fullname = $_POST['fullname'];
-  $date = $_POST['dob'];
-  $address = $_POST['address'];
-  $phone = $_POST['phone'];
-  $gender = $_POST['gender'];
-  $passwordOld = $_POST['password-old'];
-  $passwordNew1 = $_POST['password-new1'];
-  $passwordNew2 = $_POST['password-new2'];
-  print_r($passwordOld);
-  $hashedPassword = password_hash($passwordOld,PASSWORD_BCRYPT,array('cost'=>12));
-  $error = array(); $successArray = array();
-  $success = false;
-  if($passwordNew1!=$passwordNew2){
-    array_push($error,'Both Password Not Match! Please Try Again!');
-  }else if(!empty($passwordOld) && password_verify($hashedPassword,$row['PW'])){
-    array_push($error,'Old Password Not Match! Please Try Again!');
-  }else if(!empty($passwordOld) && (empty($passwordNew1||$passwordNew2))){
-    array_push($error,"Empty New Password field! Please insert values!");
-  }else if(empty($fullname)||empty($date)&&empty($address)&&empty($phone)){
-    array_push($error,'Empty Field! Please Try Again!');
-  }else if(!$uppercase || !$lowercase || !$number || strlen($password) < 8){
-    array_push($error,'Weak Password! Please Try Again!');  
-  }else{
-    $password = $row['PW'];
-    if(!empty($passwordNew1)){
-      $password = password_hash($passwordNew1,PASSWORD_BCRYPT,array('cost'=>12));
+	$fullname = $_POST['fullname'];
+	$date = $_POST['dob'];
+	$address = $_POST['address'];
+	$phone = $_POST['phone'];
+	$gender = $_POST['gender'];
+	$passwordOld = $_POST['password-old'];
+	$passwordNew1 = $_POST['password-new1'];
+	$passwordNew2 = $_POST['password-new2'];
+	$error = array(); $successArray = array();
+	$success = false;
+  $uppercase = preg_match('@[A-Z]@', $passwordNew1);
+  $lowercase = preg_match('@[a-z]@', $passwordNew1);
+  $number    = preg_match('@[0-9]@', $passwordNew1);
+	if(!empty($passwordOld)){
+		$hashedPassword = password_hash($passwordOld,PASSWORD_BCRYPT,array('cost'=>12));
+		if($passwordNew1!=$passwordNew2){
+			array_push($error,'Both Password Not Match! Please Try Again!');
+		}else if(password_verify($hashedPassword,$row['PW'])){
+			array_push($error,'Old Password Not Match! Please Try Again!');
+		}else if(empty($passwordNew1||$passwordNew2)){
+			array_push($error,"Empty New Password field! Please insert values!");
+		}else if(empty($fullname)||empty($date)&&empty($address)&&empty($phone)){
+			array_push($error,'Empty Field! Please Try Again!');
+		}else if(!$uppercase || !$lowercase || !$number || strlen($password) < 8){
+			array_push($error,'Weak Password! Please Try Again!');  
     }
+    
+    if(!empty($passwordNew1)&&empty($error)){
+      $password = password_hash($passwordNew1,PASSWORD_BCRYPT,array('cost'=>12));
+      $updateSql = "UPDATE users SET PW = '$password' WHERE USER_ID = '$user_check';";
+		if(mysqli_multi_query($conn,$updateSql)){
+			array_push($successArray,"User Password Changed Successfully!");
+		}else{
+			array_push($error,"User Password Update Error! Please Try Again!");
+		}
+		}
+		
+  }
+  if($fullname!=$row['PATIENT_NAME']||$date!=$row['DOB']||$address!=$row['ADDR']||$phone!=$row['PHONE']||$gender!=$row['GENDER']){
+    
+  //update user detail
+ if(!preg_match('/^(\+?6?01)[0|1|2|3|4|6|7|8|9]\-*[0-9]{7,8}$/',$phone) || strlen($phone)<9||strlen($phone)>12){
+    array_push($error,'Incorrect phone number! Please Try Again!');
+  }
+
+  if(empty($error)){
     $updateSql1 = "UPDATE patient SET PATIENT_NAME = '$fullname', DOB = '$date',  ADDR = '$address', PHONE = '$phone', GENDER = '$gender' WHERE PATIENT_ID = ANY(SELECT PATIENT_ID FROM users WHERE USER_ID = '$user_check'); ";
-    $updateSql1 .= "UPDATE users SET PW = '$password' WHERE USER_ID = '$user_check';";
 
     if(mysqli_multi_query($conn,$updateSql1)){
       array_push($successArray,"User Detail Updated Successfully!");
+      header("Refresh:0");
     }else{
       array_push($error,"Update Error! Please Try Again!");
     }
+  }
+    
+
+  }
+
+
+
+    //Files upload
     if(!empty($_FILES['file']['tmp_name'])){
       $file = $_FILES['file'];
     $fileName = $_FILES['file']['name'];
@@ -108,8 +135,12 @@ if($_SERVER['REQUEST_METHOD']=='POST')  {
               <input type="text" class="form-control" id="exampleFormControlInput4" value="Patient" readonly class="form-control-plaintext"> <!-- readonly cannot be edited -->
             </div>
             <div class="form-group">
+              <label for="exampleFormControlInput4">Patient ID</label>
+              <input type="text" class="form-control" id="exampleFormControlInput4" value=<?php echo $row['PATIENT_ID']; ?> readonly class="form-control-plaintext"> <!-- readonly cannot be edited -->
+            </div>
+            <div class="form-group">
               <label for="exampleFormControlInput1">Name</label>
-              <input type="text" class="form-control" name="fullname" id="exampleFormControlInput1" value="<?php echo $row['PATIENT_NAME'];?>">
+              <input type="text" class="form-control"  required  name="fullname" id="exampleFormControlInput1" value="<?php echo $row['PATIENT_NAME'];?>">
             </div>
             <div class="form-group">
               <label for="exampleFormControlInput10">Date of birth</label>
@@ -121,7 +152,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')  {
             </div>
             <div class="form-group">
               <label for="exampleFormControlTextarea1">Home address</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" name="address" rows="3" ><?php echo $row['ADDR']?></textarea>
+              <textarea class="form-control" id="exampleFormControlTextarea1" required name="address" rows="3" ><?php echo $row['ADDR']?></textarea>
             </div>
             <div class="form-group">
               <label for="exampleFormControlInput2">Email address</label>
@@ -130,7 +161,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')  {
             </div>
             <div class="form-group">
               <label for="exampleFormControlInput3">Phone number</label>
-              <input type="text" name="phone" class="form-control" id="exampleFormControlInput3" value="<?php
+              <input type="text" name="phone" class="form-control" id="exampleFormControlInput3" required value="<?php
               echo $row['PHONE']?>">
             </div>
 
@@ -139,8 +170,8 @@ if($_SERVER['REQUEST_METHOD']=='POST')  {
               <select class="form-control" id="exampleFormControlSelect1" name="gender">
                 
                 
-                <option value='1' <?php $row['GENDER']==1 ? "selected" : ""; ?>>Male</option>
-                <option value='2'<?php $row['GENDER']==0 ? "selected" : ""; ?>>Female</option>
+                <option value='1' <?php echo $row['GENDER']==1 ?  "selected" : ""; ?>>Male </option>
+                <option value='0'<?php echo $row['GENDER']==0 ?  "selected" : ""; ?>>Female</option>
 
               </select>
             </div>
@@ -168,8 +199,6 @@ if($_SERVER['REQUEST_METHOD']=='POST')  {
   </div>
 </section>
 <?php
-
-}
 
 $conn->close(); ?>
 <!-- right section ends -->

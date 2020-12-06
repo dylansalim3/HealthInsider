@@ -117,7 +117,7 @@ if(mysqli_num_rows($result)>0){
                             $i=1;
                             while($row1 = mysqli_fetch_assoc($result1)){
                               echo '<tr class="table-secondary">
-                              <td scope="row">$i</td>
+                              <td scope="row">'.$i.'</td>
                               <td>'.$row1["DATE"].'</td>
                               <td>'.$row1["TIME"].'</td>
                               <td>'.$row1["PATIENT_HISTORY"].'</td>

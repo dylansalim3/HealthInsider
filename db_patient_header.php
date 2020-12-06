@@ -15,7 +15,11 @@ $page = $_SESSION['page'];
   <link rel="stylesheet" href="css\db_index.css">
   <!-- Font awesome CDN -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-  <title>HealthInsider Healthcare Data Mangement System</title>
+
+    <link href='fullcalendar/core/main.css' rel='stylesheet'/>
+    <link href='fullcalendar/daygrid/main.css' rel='stylesheet'/>
+    <link href='fullcalendar/timegrid/main.css' rel='stylesheet'/>
+    <title>HealthInsider Healthcare Data Mangement System</title>
 </head>
 <body>
   <!-- navbar -->
